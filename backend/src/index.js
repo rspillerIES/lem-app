@@ -1,8 +1,14 @@
 const express = require('express');
+const { Pool } = require('pg');
 const app = express();
 const PORT = 8080;
 
 console.log('Starting server...');
+
+// Database connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -35,32 +41,15 @@ app.post('/api/auth/login', (req, res) => {
   res.status(401).json({ error: 'Invalid' });
 });
 
-// Projects
-app.get('/api/projects', (req, res) => {
-  res.json([
-    {
-      project_id: '1',
-      project_name: 'Downtown Office Retrofit',
-      project_number: 'DOR-2024-001',
-      po_number: 'PO-12345',
-      po_value: '125000.00',
-      budget_type: 'T&M',
-      start_date: '2024-01-15',
-      end_date: '2024-06-30',
-      pm_name: 'John Smith',
-    },
-    {
-      project_id: '2',
-      project_name: 'Industrial Plant Upgrade',
-      project_number: 'IPU-2024-002',
-      po_number: 'PO-12346',
-      po_value: '250000.00',
-      budget_type: 'LS',
-      start_date: '2024-02-01',
-      end_date: '2024-08-15',
-      pm_name: 'Jane Doe',
-    },
-  ]);
+// Projects from database
+app.get('/api/projects', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM projects LIMIT 50');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Projects error:', err);
+    res.status(500).json({ error: 'Failed to fetch projects' });
+  }
 });
 
 console.log('Listening on ' + PORT);
