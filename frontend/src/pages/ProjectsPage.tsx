@@ -22,7 +22,7 @@ export const ProjectsPage: React.FC = () => {
       setIsLoading(true);
       setError('');
       const response = await api.getProjects();
-      setProjects(response.projects || []);
+      setProjects(Array.isArray(response) ? response : response.projects || []);
     } catch (err) {
       setError(api.getErrorMessage(err));
     } finally {
