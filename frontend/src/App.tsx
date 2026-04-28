@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import { LoginPage, ProjectsPage, ProjectDetailPage } from './pages';
+import { LoginPage, ProjectsPage, ProjectDetailPage, DailyEntryPage } from './pages';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
@@ -42,6 +42,15 @@ export function App() {
           element={
             <ProtectedRoute>
               <ProjectDetailPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/entries"
+          element={
+            <ProtectedRoute>
+              <DailyEntryPage />
             </ProtectedRoute>
           }
         />
