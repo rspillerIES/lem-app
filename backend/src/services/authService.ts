@@ -1,6 +1,6 @@
 import { query } from '../config/database';
 import { generateToken, comparePassword, hashPassword } from '../middleware/auth';
-import { User, LoginRequest, AuthPayload } from '../types';
+import { User, LoginRequest, AuthPayload, Role } from '../types';
 import { AppError } from '../middleware/errors';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -61,13 +61,13 @@ export async function getUserDivisions(userId: string): Promise<string[]> {
  * Get user's roles (hardcoded for MVP, can be extended to database)
  * TODO: Store roles in database table in Phase 2
  */
-function getUserRoles(email: string): string[] {
+function getUserRoles(email: string): Role[] {
   // Mock roles based on email for MVP
   // In production, store in database
-  if (email.includes('admin')) return ['PM', 'PA', 'Admin'];
-  if (email.includes('pm')) return ['PM', 'PC'];
-  if (email.includes('foreman')) return ['Foreman'];
-  return ['Foreman']; // Default role
+  if (email.includes('admin')) return ['PM', 'PA', 'Admin'] as Role[];
+if (email.includes('pm')) return ['PM', 'PC'] as Role[];
+if (email.includes('foreman')) return ['Foreman'] as Role[];
+return ['Foreman'] as Role[];
 }
 
 /**
