@@ -1,10 +1,7 @@
 import { startServer } from './server';
 
 // Start the server
-startServer().catch((err) => {
-  console.error('Fatal error:', err);
-  process.exit(1);
-});
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
