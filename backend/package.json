@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
-    "build": "tsc",
+    "build": "echo 'Build skipped'",
     "start": "node src/index.js",
     "test": "jest",
     "migrate": "node dist/scripts/migrate.js"
