@@ -71,24 +71,16 @@ app.use(errorHandler);
 /**
  * Start server
  */
-export async function startServer() {
-  return new Promise<void>((resolve) => {
-    const server = app.listen(PORT, () => {
-      console.log(`
+export function startServer() {
+  app.listen(PORT, () => {
+    console.log(`
 ╔════════════════════════════════════════╗
 ║   LEM App Backend - Server Running     ║
 ║   Port: ${PORT}                           ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}                ║
 ║   CORS Origin: ${FRONTEND_URL}          ║
 ╚════════════════════════════════════════╝
-      `);
-      resolve();
-    });
-
-    server.on('error', (err) => {
-      console.error('Server error:', err);
-      process.exit(1);
-    });
+    `);
   });
 }
 
