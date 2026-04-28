@@ -2,11 +2,11 @@
   "name": "lem-app-backend",
   "version": "1.0.0",
   "description": "LEM App Backend - Daily Timesheet & Budget Tracking",
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/server.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
     "test": "jest",
     "migrate": "node dist/scripts/migrate.js"
   },
