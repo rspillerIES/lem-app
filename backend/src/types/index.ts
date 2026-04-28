@@ -18,7 +18,7 @@ export interface AuthPayload {
   roles: Role[];
 }
 
-export type Role = 'Foreman' | 'Worker' | 'PM' | 'PC' | 'PA' | 'Controls' | 'Div_Manager';
+export type Role = 'Foreman' | 'Worker' | 'PM' | 'PC' | 'PA' | 'Controls' | 'Div_Manager' | 'Admin';
 
 // Company & Organization
 export interface Company {
