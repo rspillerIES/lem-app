@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card } from '../components';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -6,14 +7,15 @@ import { Project } from '../types';
 
 export const DailyEntryPage: React.FC = () => {
   const user = useAuth((state) => state.user);
-
+  const { projectId } = useParams<{ projectId: string }>();
+  const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const [formData, setFormData] = useState({
-    project_id: '',
+    project_id: projectId || '',
     date_of_work: new Date().toISOString().split('T')[0],
     regular_hours: '',
     cost_code_id: 'LABOR',
@@ -45,10 +47,8 @@ export const DailyEntryPage: React.FC = () => {
 
   const fetchEntries = async () => {
     try {
-      const response = await fetch(
-        `https://lem-app-production.up.railway.app/api/entries?projectId=${formData.project_id}`
-      );
-      const data = await response.json();
+      const response = await api.getEntries(formData.project_id);
+      const data = response.entries || response;
       setEntries(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch entries:', err);
@@ -70,23 +70,16 @@ export const DailyEntryPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://lem-app-production.up.railway.app/api/entries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          regular_hours: parseFloat(formData.regular_hours) || 0,
-        }),
+      await api.saveTimeEntry(formData.project_id, {
+        date_of_work: formData.date_of_work,
+        regular_hours: parseFloat(formData.regular_hours) || 0,
+        cost_code_id: formData.cost_code_id,
+        position_name: formData.position_name,
+        employee_id: formData.employee_id,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create entry');
-      }
-
-      await response.json();
       setSuccess('Entry created successfully!');
-      
+
       setFormData({
         project_id: formData.project_id,
         date_of_work: new Date().toISOString().split('T')[0],
@@ -97,7 +90,6 @@ export const DailyEntryPage: React.FC = () => {
       });
 
       await fetchEntries();
-
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create entry');
@@ -110,6 +102,12 @@ export const DailyEntryPage: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b border-gray-200 p-6">
         <div className="max-w-7xl mx-auto">
+          <button
+            onClick={() => navigate(`/projects/${projectId}`)}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium mb-4 block"
+          >
+            ← Back to Project
+          </button>
           <h1 className="text-3xl font-bold text-gray-900">Daily Time Entry</h1>
           <p className="text-gray-600 mt-1">Log your work hours</p>
         </div>
@@ -124,7 +122,6 @@ export const DailyEntryPage: React.FC = () => {
                   {error}
                 </div>
               )}
-
               {success && (
                 <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded text-green-800">
                   {success}
