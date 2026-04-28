@@ -108,20 +108,22 @@ app.use(errorHandler);
  * Start server
  */
 export async function startServer() {
- 
   try {
     // Initialize database first
-   await initializeDatabase();
+    await initializeDatabase();
     
-    app.listen(PORT, () => {
-      console.log(`
+    return new Promise<void>((resolve) => {
+      app.listen(PORT, () => {
+        console.log(`
 ╔════════════════════════════════════════╗
 ║   LEM App Backend - Server Running     ║
 ║   Port: ${PORT}                           ║
 ║   Environment: ${process.env.NODE_ENV || 'development'}                ║
 ║   CORS Origin: ${FRONTEND_URL}          ║
 ╚════════════════════════════════════════╝
-      `);
+        `);
+        resolve();
+      });
     });
   } catch (err) {
     console.error('Failed to start server:', err);
