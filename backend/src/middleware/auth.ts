@@ -9,7 +9,7 @@ const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '7d';
  * Generate JWT token
  */
 export function generateToken(payload: AuthPayload): string {
-  return jwt.sign(payload, JWT_SECRET, {
+return jwt.sign(payload as Record<string, any>, JWT_SECRET, {
     expiresIn: JWT_EXPIRATION,
   });
 }
