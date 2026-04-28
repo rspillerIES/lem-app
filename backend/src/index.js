@@ -66,41 +66,39 @@ app.get('/api/entries', async (req, res) => {
     }
     
     if (startDate) {
-      sql += ' AND entry_date >= $' + (params.length + 1);
+      sql += ' AND date_of_work >= $' + (params.length + 1);
       params.push(startDate);
     }
     
     if (endDate) {
-      sql += ' AND entry_date <= $' + (params.length + 1);
+      sql += ' AND date_of_work <= $' + (params.length + 1);
       params.push(endDate);
     }
     
-    sql += ' ORDER BY entry_date DESC LIMIT 100';
-    
-    console.log('Entries query:', sql, params); // Log the query
+    sql += ' ORDER BY date_of_work DESC LIMIT 100';
     
     const result = await pool.query(sql, params);
     res.json(result.rows);
   } catch (err) {
-    console.error('Get entries error:', err.message, err.detail); // Log full error
-    res.status(500).json({ error: 'Failed to fetch entries', details: err.message });
+    console.error('Get entries error:', err);
+    res.status(500).json({ error: 'Failed to fetch entries' });
   }
 });
 
 // Create Entry
 app.post('/api/entries', async (req, res) => {
   try {
-    const { project_id, employee_id, entry_date, hours_worked, cost_code, description } = req.body;
+    const { project_id, employee_id, date_of_work, regular_hours, cost_code_id, position_name } = req.body;
     
-    if (!project_id || !entry_date || !hours_worked) {
+    if (!project_id || !date_of_work || !cost_code_id || !position_name) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
     
     const result = await pool.query(
-      `INSERT INTO daily_time_entries (project_id, employee_id, entry_date, hours_worked, cost_code, description)
+      `INSERT INTO daily_time_entries (project_id, employee_id, date_of_work, regular_hours, cost_code_id, position_name)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [project_id, employee_id, entry_date, hours_worked, cost_code, description]
+      [project_id, employee_id, date_of_work, regular_hours || 0, cost_code_id, position_name]
     );
     
     res.status(201).json(result.rows[0]);
