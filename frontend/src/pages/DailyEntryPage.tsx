@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button, Card } from '../components';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { Project } from '../types';
 
 export const DailyEntryPage: React.FC = () => {
-  const navigate = useNavigate();
   const user = useAuth((state) => state.user);
 
   const [projects, setProjects] = useState<Project[]>([]);
