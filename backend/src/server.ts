@@ -19,6 +19,45 @@ const PORT = process.env.PORT || 3001;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 /**
+ * Auto-run database migration on startup
+ */
+async function initializeDatabase() {
+  try {
+    console.log('🔄 Initializing database...');
+    // Import and run migration
+    const { query } = require('./config/database');
+    
+    // Check if tables exist
+    const result = await query(`
+      SELECT COUNT(*) as table_count
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+    `);
+    
+    const tableCount = parseInt(result.rows[0].table_count);
+    
+    if (tableCount === 0) {
+      console.log('📊 No tables found. Running migration...');
+      // Dynamically require and run migration
+      const migration = require('./scripts/migrate');
+      if (migration.default) {
+        await migration.default();
+      }
+      console.log('✅ Database migration completed successfully!');
+    } else {
+      console.log(`✅ Database ready - ${tableCount} tables found`);
+    }
+  } catch (err) {
+    console.error('⚠️ Database initialization warning:', err instanceof Error ? err.message : err);
+    // Don't crash - the backend will continue running
+    // Routes will fail if database isn't ready, but at least we tried
+  }
+}
+
+// Initialize database before starting server
+initializeDatabase();
+
+/**
  * Middleware
  */
 
