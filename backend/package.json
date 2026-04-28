@@ -4,12 +4,13 @@
   "description": "LEM App Backend - Daily Timesheet & Budget Tracking",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
-    "build": "echo 'Build skipped'",
-    "start": "node src/index.js",
-    "test": "jest",
-    "migrate": "node dist/scripts/migrate.js"
-  },
+  "dev": "nodemon --exec ts-node src/index.ts",
+  "build": "echo 'Build skipped'",
+  "start": "node src/index.js",
+  "test": "jest",
+  "migrate": "node dist/scripts/migrate.js",
+  "seed": "ts-node src/scripts/seed-demo.ts"
+},
   "keywords": ["lem", "timesheet", "budget", "construction"],
   "author": "Impact Energy Services",
   "license": "MIT",
