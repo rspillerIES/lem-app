@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { AuthPayload } from '../types';
 
@@ -10,7 +10,7 @@ const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '7d';
  */
 export function generateToken(payload: AuthPayload): string {
 return jwt.sign(payload as Record<string, any>, JWT_SECRET, {
-expiresIn: JWT_EXPIRATION as string,
+expiresIn: JWT_EXPIRATION as SignOptions['expiresIn'],
   });
 }
 
