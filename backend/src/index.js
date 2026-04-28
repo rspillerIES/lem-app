@@ -52,6 +52,62 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
+// Daily Entries
+app.get('/api/entries', async (req, res) => {
+  try {
+    const { projectId, startDate, endDate } = req.query;
+    
+    let sql = 'SELECT * FROM daily_time_entries WHERE 1=1';
+    const params = [];
+    
+    if (projectId) {
+      sql += ' AND project_id = $' + (params.length + 1);
+      params.push(projectId);
+    }
+    
+    if (startDate) {
+      sql += ' AND entry_date >= $' + (params.length + 1);
+      params.push(startDate);
+    }
+    
+    if (endDate) {
+      sql += ' AND entry_date <= $' + (params.length + 1);
+      params.push(endDate);
+    }
+    
+    sql += ' ORDER BY entry_date DESC LIMIT 100';
+    
+    const result = await pool.query(sql, params);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Get entries error:', err);
+    res.status(500).json({ error: 'Failed to fetch entries' });
+  }
+});
+
+// Create Entry
+app.post('/api/entries', async (req, res) => {
+  try {
+    const { project_id, employee_id, entry_date, hours_worked, cost_code, description } = req.body;
+    
+    if (!project_id || !entry_date || !hours_worked) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    
+    const result = await pool.query(
+      `INSERT INTO daily_time_entries (project_id, employee_id, entry_date, hours_worked, cost_code, description)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *`,
+      [project_id, employee_id, entry_date, hours_worked, cost_code, description]
+    );
+    
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Create entry error:', err);
+    res.status(500).json({ error: 'Failed to create entry' });
+  }
+});
+
 console.log('Listening on ' + PORT);
 app.listen(PORT, () => console.log('✅ Server running'));
 setInterval(() => {}, 30000);
