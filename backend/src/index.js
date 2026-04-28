@@ -77,11 +77,13 @@ app.get('/api/entries', async (req, res) => {
     
     sql += ' ORDER BY entry_date DESC LIMIT 100';
     
+    console.log('Entries query:', sql, params); // Log the query
+    
     const result = await pool.query(sql, params);
     res.json(result.rows);
   } catch (err) {
-    console.error('Get entries error:', err);
-    res.status(500).json({ error: 'Failed to fetch entries' });
+    console.error('Get entries error:', err.message, err.detail); // Log full error
+    res.status(500).json({ error: 'Failed to fetch entries', details: err.message });
   }
 });
 
