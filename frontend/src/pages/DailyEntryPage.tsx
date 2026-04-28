@@ -57,10 +57,7 @@ export const DailyEntryPage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -79,7 +76,6 @@ export const DailyEntryPage: React.FC = () => {
       });
 
       setSuccess('Entry created successfully!');
-
       setFormData({
         project_id: formData.project_id,
         date_of_work: new Date().toISOString().split('T')[0],
@@ -130,9 +126,7 @@ export const DailyEntryPage: React.FC = () => {
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Project *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Project *</label>
                   <select
                     name="project_id"
                     value={formData.project_id}
@@ -150,9 +144,7 @@ export const DailyEntryPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date of Work *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date of Work *</label>
                   <input
                     type="date"
                     name="date_of_work"
@@ -164,9 +156,7 @@ export const DailyEntryPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Regular Hours *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Regular Hours *</label>
                   <input
                     type="number"
                     name="regular_hours"
@@ -182,9 +172,7 @@ export const DailyEntryPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cost Code *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cost Code *</label>
                   <input
                     type="text"
                     name="cost_code_id"
@@ -197,9 +185,7 @@ export const DailyEntryPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Position *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Position *</label>
                   <input
                     type="text"
                     name="position_name"
@@ -211,12 +197,7 @@ export const DailyEntryPage: React.FC = () => {
                   />
                 </div>
 
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full"
-                >
+                <Button variant="primary" type="submit" disabled={isLoading} className="w-full">
                   {isLoading ? 'Creating...' : 'Log Time Entry'}
                 </Button>
               </form>
