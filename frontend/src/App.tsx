@@ -46,14 +46,7 @@ export function App() {
           }
         />
 
-      <Route
-          path="/entries"
-          element={
-            <ProtectedRoute>
-              <DailyEntryPage />
-            </ProtectedRoute>
-          }
-        />
+      <Route path="/projects/:projectId/entries" element={<ProtectedRoute><DailyEntryPage /></ProtectedRoute>} />
 
         {/* Redirects */}
         <Route path="/" element={<Navigate to="/projects" replace />} />
