@@ -84,7 +84,7 @@ export const DailyEntryPage: React.FC = () => {
         throw new Error(errorData.error || 'Failed to create entry');
       }
 
-      const newEntry = await response.json();
+      await response.json();
       setSuccess('Entry created successfully!');
       
       setFormData({
