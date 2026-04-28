@@ -54,9 +54,6 @@ async function initializeDatabase() {
   }
 }
 
-// Initialize database before starting server
-initializeDatabase();
-
 /**
  * Middleware
  */
@@ -111,7 +108,11 @@ app.use(errorHandler);
  * Start server
  */
 export async function startServer() {
+ 
   try {
+    // Initialize database first
+   await initializeDatabase();
+    
     app.listen(PORT, () => {
       console.log(`
 ╔════════════════════════════════════════╗
