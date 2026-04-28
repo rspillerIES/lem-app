@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { LoginResponse, Project, DailyTimeEntry, DailyEquipmentEntry, DailyMaterialEntry, ActivityLog } from '../types';
+import { LoginResponse } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
